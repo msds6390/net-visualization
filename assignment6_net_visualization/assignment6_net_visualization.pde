@@ -28,9 +28,21 @@
    String url = "http://api.open-notify.org/iss-now.json";
    JSONObject json = loadJSONObject(url);
    //JSONArray json2 = JSONArray("file.json");
-   print(json);
+   println(json);
    //JSONObject json JSON xml = loadXML(url);
    //print(xml);
+   /*
+   float lat = json.getFloat("latitude");
+   float lon = json.getFloat("longitude");
+   print(lat);
+   print(lon);
+   */
+   JSONObject positionData = json.getJSONObject("iss_position");
+   println(positionData);
+   float latitude = positionData.getFloat("latitude");
+   println(latitude);
+   float longitude = positionData.getFloat("longitude");
+   println(longitude);
    
  }
  
