@@ -11,41 +11,72 @@
   https://processing.org/reference/curveVertex_.html
  */
  
+ import processing.opengl.*;
+ 
  PImage map;
  String url;
  JSONObject json;
  JSONObject positionData;
  Float latitude;
  Float longitude;
- int x;
- int y;
+ Float x;
+ Float y;
+ PShape ISS;
+ PImage ISSTexture;
+ Float r = 0.0;
  
  void setup(){
-   size(1000, 500);
+   size(1000, 500, P3D);
    map = loadImage("worldmap.jpg");
    map.resize(1000, 500);
    background(map);
+   
    url = "http://api.open-notify.org/iss-now.json";
-   json = loadJSONObject(url);
-   println(json);
-   JSONObject positionData = json.getJSONObject("iss_position");
-   println(positionData);
-   float latitude = positionData.getFloat("latitude");
-   println(latitude);
-   float longitude = positionData.getFloat("longitude");
-   println(longitude);
- }
- 
- void draw(){
-   background(map);
-   //url = "http://api.open-notify.org/iss-now.json";
    json = loadJSONObject(url);
    positionData = json.getJSONObject("iss_position");
    latitude = positionData.getFloat("latitude");
    longitude = positionData.getFloat("longitude");
-
-   x =  (int) ((width/360.0) * (180 + longitude));
-   y =  (int) ((height/180.0) * (90 - latitude));
    
-   ellipse(x, y, 100, 100);
+   ISS = loadShape("Grunt2.obj");
+   //ISSTexture = loadImage("foil_5.jpg");
+   //ISS.setTexture(ISSTexture);
+   ISS.scale(20);
+   
+   // ***********************************************************
+   // Texture not loading properly, not sure why
+   
+   // Initial vertices set from initial call to ISS API
+   // For each call to the API, update draing the vertexCurve
+   // So continually add new vertexes, probably in an array?
+   // ***********************************************************
+ }
+ 
+ void draw(){
+   lights();
+   background(map);
+   json = loadJSONObject(url);
+   positionData = json.getJSONObject("iss_position");
+   latitude = positionData.getFloat("latitude");
+   longitude = positionData.getFloat("longitude");
+   
+   x =  (((width/360.0) * (180 + longitude))) % width;
+   y =  (((height/180.0) * (90 - latitude))) % height;
+   println(x, y);
+   shape(ISS, x, y);
+   
+   // x =  ((width/360.0) * (180 + longitude));
+   // y =  ((height/180.0) * (90 - latitude));
+   //println(x, y);
+   
+   //x = longitude % (width);
+   //y = latitude % height;
+   //println(x, y);
+/*   
+   pushMatrix();
+   translate(width/2, height/2);
+   rotateY(PI);
+   rotateX(PI);
+   shape(ISS, x, y);
+   popMatrix();
+ */
  }
