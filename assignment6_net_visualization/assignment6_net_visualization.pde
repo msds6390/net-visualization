@@ -12,42 +12,40 @@
  */
  
  PImage map;
- Float lat;
- Float lon;
+ String url;
+ JSONObject json;
+ JSONObject positionData;
+ Float latitude;
+ Float longitude;
  int x;
  int y;
- 
  
  void setup(){
    size(1000, 500);
    map = loadImage("worldmap.jpg");
    map.resize(1000, 500);
-   //surface.setResizable(true);
-   //surface.setSize(map.width, map.height);
    background(map);
-   String url = "http://api.open-notify.org/iss-now.json";
-   JSONObject json = loadJSONObject(url);
-   //JSONArray json2 = JSONArray("file.json");
+   url = "http://api.open-notify.org/iss-now.json";
+   json = loadJSONObject(url);
    println(json);
-   //JSONObject json JSON xml = loadXML(url);
-   //print(xml);
-   /*
-   float lat = json.getFloat("latitude");
-   float lon = json.getFloat("longitude");
-   print(lat);
-   print(lon);
-   */
    JSONObject positionData = json.getJSONObject("iss_position");
    println(positionData);
    float latitude = positionData.getFloat("latitude");
    println(latitude);
    float longitude = positionData.getFloat("longitude");
    println(longitude);
-   
  }
  
  void draw(){
    background(map);
-   int x =  (int) ((width/360.0) * (180 + lon));
-   int y =  (int) ((height/180.0) * (90 - lat));
+   //url = "http://api.open-notify.org/iss-now.json";
+   json = loadJSONObject(url);
+   positionData = json.getJSONObject("iss_position");
+   latitude = positionData.getFloat("latitude");
+   longitude = positionData.getFloat("longitude");
+
+   x =  (int) ((width/360.0) * (180 + longitude));
+   y =  (int) ((height/180.0) * (90 - latitude));
+   
+   ellipse(x, y, 100, 100);
  }
