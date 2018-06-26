@@ -24,6 +24,8 @@
  PShape ISS;
  PImage ISSTexture;
  Float r = 0.0;
+ ArrayList<PVector> curve;
+ PShape Curve;
  
  void setup(){
    size(1000, 500, P3D);
@@ -36,19 +38,17 @@
    positionData = json.getJSONObject("iss_position");
    latitude = positionData.getFloat("latitude");
    longitude = positionData.getFloat("longitude");
+   x =  (((width/360.0) * (180 + longitude)));// % width;
+   y =  (((height/180.0) * (90 - latitude)));
+   curve = new ArrayList();
+   curve.add(new PVector(x, y));
+   //API.getJSON(url);
+   
    
    ISS = loadShape("Grunt2.obj");
    //ISSTexture = loadImage("foil_5.jpg");
    //ISS.setTexture(ISSTexture);
-   ISS.scale(20);
-   
-   // ***********************************************************
-   // Texture not loading properly, not sure why
-   
-   // Initial vertices set from initial call to ISS API
-   // For each call to the API, update draing the vertexCurve
-   // So continually add new vertexes, probably in an array?
-   // ***********************************************************
+   ISS.scale(10);
  }
  
  void draw(){
@@ -59,24 +59,20 @@
    latitude = positionData.getFloat("latitude");
    longitude = positionData.getFloat("longitude");
    
-   x =  (((width/360.0) * (180 + longitude))) % width;
-   y =  (((height/180.0) * (90 - latitude))) % height;
+   x =  (((width/360.0) * (180 + longitude)));// % width;
+   y =  (((height/180.0) * (90 - latitude)));// % height;
    println(x, y);
-   shape(ISS, x, y);
    
-   // x =  ((width/360.0) * (180 + longitude));
-   // y =  ((height/180.0) * (90 - latitude));
-   //println(x, y);
+   curve.add(new PVector(x,y));
+   noFill();
+   stroke(255, 0, 0);
+   strokeWeight(10);
+   beginShape();
+   for (int i = curve.size() - 1; i >= 0; i--) {
+     PVector v = curve.get(i);
+     curveVertex(v.x, v.y);
+   }
+   endShape();
    
-   //x = longitude % (width);
-   //y = latitude % height;
-   //println(x, y);
-/*   
-   pushMatrix();
-   translate(width/2, height/2);
-   rotateY(PI);
-   rotateX(PI);
    shape(ISS, x, y);
-   popMatrix();
- */
  }
